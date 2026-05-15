@@ -45,7 +45,19 @@
             gap: 1rem;
         }
 
-          
+        .logo-ismael {
+            background: #cbbf9a;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .logo-ismael span {
+            font-size: 2rem;
+        }
         .title h1 {
             font-size: 1.6rem;
             color: #4f3e28;
@@ -276,9 +288,10 @@
 <div class="container">
     <div class="header">
         <div class="logo-area">
-                     <div class="title">
+            <div class="logo-ismael"><span>🕊️</span></div>
+            <div class="title">
                 <h1>📞 Ramais Internos · Santana / Tucuruvi</h1>
-                
+                <p>Centro Espírita Ismael | Lista de contatos administrativos</p>
             </div>
         </div>
         <div class="stats-badge no-print" id="totalCount"></div>
@@ -306,7 +319,7 @@
         </table>
     </div>
     <div class="footer-actions no-print">
-       
+        <span class="info-edit">✎ Clique em qualquer célula para editar | 🔒 Adicionar/Excluir requer senha: <strong>********</strong></span>
     </div>
 </div>
 
@@ -414,6 +427,9 @@
     let currentFilter = "";
     let selectedRowIndex = null;
     let selectedRamalId = null;
+
+    // SENHA DEFINIDA
+    const ADMIN_PASSWORD = "agti2026";
 
     function renderTable() {
         const tbody = document.getElementById('tableBody');
