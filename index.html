@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ramais Internos - Santana/Tucuruvi | Edição Protegida</title>
+    <title>Ramais Internos - Santana/Tucuruvi | Edição Protegida + Excel</title>
     <style>
         * {
             margin: 0;
@@ -112,6 +112,13 @@
         }
         .btn-warning:hover {
             background: #b89a55;
+        }
+        .btn-excel {
+            background: #1f724c;
+            color: white;
+        }
+        .btn-excel:hover {
+            background: #145a3b;
         }
 
         .btn:hover {
@@ -324,7 +331,7 @@
         <div class="logo-area">
             <div class="title">
                 <h1>📞 Ramais Internos · Santana / Tucuruvi</h1>
-                <p> Lista centralizada | Edição segura com senha</p>
+                <p> Lista centralizada | Edição segura com senha | Exportar Excel</p>
             </div>
         </div>
         <div class="stats-badge no-print" id="totalCount"></div>
@@ -335,6 +342,7 @@
             <button class="btn btn-success" id="addRamalBtn">➕ Adicionar Ramal</button>
             <button class="btn btn-danger" id="deleteRamalBtn">🗑️ Excluir (selecionado)</button>
             <button class="btn btn-warning" id="enableEditModeBtn">✏️ Ativar Edição (senha)</button>
+            <button class="btn btn-excel" id="exportExcelBtn">📎 Exportar para Excel</button>
             <button class="btn btn-primary" id="printBtn">🖨️ Imprimir / PDF</button>
             <button class="btn" id="resetDataBtn">⟳ Restaurar original</button>
         </div>
@@ -359,7 +367,7 @@
         </table>
     </div>
     <div class="footer-actions no-print">
-        <span class="info-edit">🔒 Visualização padrão | Clique em "Ativar Edição" para modificar dados (senha: ********)</span>
+        <span class="info-edit">🔒 Visualização padrão | Clique em "Ativar Edição" para modificar dados (senha: agti2026) | Exportar leva em conta o filtro atual</span>
     </div>
 </div>
 
@@ -466,12 +474,21 @@
     let ramaisData = JSON.parse(JSON.stringify(originalRamais));
     let currentFilter = "";
     let selectedRamalId = null;
-    let editModeActive = false;          // Flag para saber se edição está ativa
+    let editModeActive = false;
     const ADMIN_PASSWORD = "agti2026";
 
     function saveToLocal() { localStorage.setItem('ramais_cei_editavel', JSON.stringify(ramaisData)); }
     
-    // Cria célula editável (contenteditable) ou texto puro conforme modo de edição
+    function getFilteredData() {
+        if (currentFilter.trim() === "") return ramaisData;
+        return ramaisData.filter(item => 
+            item.ramal.toLowerCase().includes(currentFilter) ||
+            item.setor.toLowerCase().includes(currentFilter) ||
+            item.funcionario.toLowerCase().includes(currentFilter) ||
+            item.terminal.toLowerCase().includes(currentFilter)
+        );
+    }
+    
     function renderCellContent(value, fieldName, item, rowKey) {
         if (editModeActive) {
             const span = document.createElement('span');
@@ -485,7 +502,7 @@
                     if (target) {
                         target[fieldName] = newValue;
                         saveToLocal();
-                        renderTable();  // re-renderiza para manter consistência
+                        renderTable();
                     }
                 }
             });
@@ -503,14 +520,8 @@
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        const filtered = currentFilter.trim() === "" ? ramaisData : ramaisData.filter(item => 
-            item.ramal.toLowerCase().includes(currentFilter) ||
-            item.setor.toLowerCase().includes(currentFilter) ||
-            item.funcionario.toLowerCase().includes(currentFilter) ||
-            item.terminal.toLowerCase().includes(currentFilter)
-        );
+        const filtered = getFilteredData();
         
-        // Aplica classe CSS para indicar modo edição no wrapper
         const wrapper = document.getElementById('tableWrapper');
         if (editModeActive) wrapper.classList.add('editing-mode');
         else wrapper.classList.remove('editing-mode');
@@ -520,61 +531,45 @@
             const rowKey = item.ramal + "|" + item.setor;
             if (selectedRamalId === rowKey) row.classList.add('selected-row');
             
-            // Coluna Ramal (editável se modo ativo)
             const tdRamal = row.insertCell(0);
             const ramalContent = renderCellContent(item.ramal, 'ramal', item, rowKey);
             if (!editModeActive) ramalContent.style.fontWeight = '800';
             tdRamal.appendChild(ramalContent);
             
-            // Setor
             const tdSetor = row.insertCell(1);
             tdSetor.appendChild(renderCellContent(item.setor, 'setor', item, rowKey));
             
-            // Funcionário
             const tdFunc = row.insertCell(2);
             tdFunc.appendChild(renderCellContent(item.funcionario, 'funcionario', item, rowKey));
             
-            // Terminal
             const tdTerm = row.insertCell(3);
             tdTerm.appendChild(renderCellContent(item.terminal, 'terminal', item, rowKey));
             
-            // Ações: botão Editar (se modo inativo, clicar solicita senha) + Excluir
             const tdAction = row.insertCell(4);
             tdAction.classList.add('no-print');
             tdAction.style.textAlign = "center";
             const actionDiv = document.createElement('div');
             actionDiv.className = 'action-buttons';
             
-            // Botão editar específico da linha (se modo inativo, pede senha e ativa modo + seleciona)
             const editRowBtn = document.createElement('button');
             editRowBtn.textContent = editModeActive ? "✏️ Editar" : "🔒 Editar";
             editRowBtn.classList.add('edit-row-btn');
-            editRowBtn.title = editModeActive ? "Editar esta linha (já ativo)" : "Ativar modo edição com senha";
             editRowBtn.onclick = (e) => {
                 e.stopPropagation();
                 if (!editModeActive) {
-                    // Solicita senha e ativa modo edição global
                     promptPasswordToEnableEdit(() => {
                         editModeActive = true;
                         renderTable();
-                        // Após ativar, rola um pouco e destaca linha
-                        setTimeout(() => {
-                            const newRow = document.querySelector(`tr.selected-row`);
-                            if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }, 50);
                     });
                 } else {
-                    // Já em modo edição, apenas informa que pode clicar diretamente nas células
                     alert("✏️ Modo edição já ativo! Clique diretamente nas células para editar.");
                 }
             };
             actionDiv.appendChild(editRowBtn);
             
-            // Botão excluir
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = "🗑️";
             deleteBtn.classList.add('delete-btn');
-            deleteBtn.title = "Excluir ramal (requer senha)";
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
                 promptDeleteWithPassword(item.ramal, item.setor);
@@ -582,7 +577,6 @@
             actionDiv.appendChild(deleteBtn);
             tdAction.appendChild(actionDiv);
             
-            // Seleção de linha (exceto se clicar nos botões)
             row.onclick = (e) => {
                 if (e.target.tagName !== 'BUTTON' && !e.target.isContentEditable) {
                     selectedRamalId = rowKey;
@@ -591,6 +585,49 @@
             };
         });
         document.getElementById('totalCount').innerHTML = `📋 ${filtered.length} ramais cadastrados ${editModeActive ? '(Modo Edição Ativo)' : ''}`;
+    }
+    
+    function exportToExcel() {
+        const filtered = getFilteredData();
+        if (filtered.length === 0) {
+            alert("⚠️ Não há dados para exportar com o filtro atual.");
+            return;
+        }
+        
+        // Cabeçalhos
+        const headers = ["Ramal", "Setor", "Funcionário", "Terminal"];
+        const rows = filtered.map(item => [
+            item.ramal,
+            item.setor,
+            item.funcionario,
+            item.terminal || ""
+        ]);
+        
+        // Criar conteúdo CSV (compatível com Excel)
+        let csvContent = headers.join(",") + "\n";
+        rows.forEach(row => {
+            const escapedRow = row.map(cell => {
+                let cellStr = String(cell);
+                if (cellStr.includes(",") || cellStr.includes("\n") || cellStr.includes('"')) {
+                    cellStr = '"' + cellStr.replace(/"/g, '""') + '"';
+                }
+                return cellStr;
+            }).join(",");
+            csvContent += escapedRow + "\n";
+        });
+        
+        // Adicionar BOM para UTF-8 e fazer download
+        const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute("download", "ramais_santana_tucuruvi.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        alert("✅ Exportação concluída! O arquivo CSV pode ser aberto no Excel.");
     }
     
     function promptPasswordToEnableEdit(callback) {
@@ -638,7 +675,7 @@
             ramaisData = JSON.parse(JSON.stringify(originalRamais)); 
             saveToLocal(); 
             selectedRamalId = null;
-            editModeActive = false;  // desativa edição ao restaurar
+            editModeActive = false;
             renderTable();
             alert("✅ Lista restaurada com sucesso!");
         }
@@ -749,6 +786,7 @@
     document.getElementById('addRamalBtn').onclick = promptAddRamal;
     document.getElementById('deleteRamalBtn').onclick = deleteSelectedRamal;
     document.getElementById('enableEditModeBtn').onclick = enableEditModeWithPassword;
+    document.getElementById('exportExcelBtn').onclick = exportToExcel;
     document.getElementById('printBtn').onclick = () => window.print();
     document.getElementById('resetDataBtn').onclick = resetData;
     document.getElementById('searchInput').addEventListener('input', (e) => { 
