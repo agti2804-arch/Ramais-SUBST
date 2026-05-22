@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ramais Internos - Santana/Tucuruvi </title>
+    <title>Ramais Internos - Santana/Tucuruvi | Edição Protegida</title>
     <style>
         * {
             margin: 0;
@@ -45,19 +45,6 @@
             gap: 1rem;
         }
 
-        .logo-ismael {
-            background: #cbbf9a;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .logo-ismael span {
-            font-size: 2rem;
-        }
         .title h1 {
             font-size: 1.6rem;
             color: #4f3e28;
@@ -112,16 +99,19 @@
             background: #5b7f5e;
             color: white;
         }
-        .btn-warning {
-            background: #c9ae6e;
-            color: #2c2418;
-        }
         .btn-danger {
             background: #b55a4a;
             color: white;
         }
         .btn-danger:hover {
             background: #9e4738;
+        }
+        .btn-warning {
+            background: #c9ae6e;
+            color: #2c2418;
+        }
+        .btn-warning:hover {
+            background: #b89a55;
         }
 
         .btn:hover {
@@ -158,6 +148,7 @@
             border-radius: 1rem;
             margin: 1rem 0;
             border: 1px solid #ede3d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .ramal-table {
@@ -165,57 +156,95 @@
             border-collapse: collapse;
             font-size: 0.85rem;
             background: white;
+            min-width: 750px;
+        }
+
+        /* CENTRALIZAÇÃO TOTAL DOS CABEÇALHOS E CÉLULAS */
+        .ramal-table th,
+        .ramal-table td {
+            text-align: center !important;
+            vertical-align: middle !important;
         }
 
         .ramal-table th {
             background: #dacfa9;
             color: #2f2a1f;
-            padding: 12px 8px;
+            padding: 14px 8px;
             font-weight: 700;
             position: sticky;
             top: 0;
             white-space: nowrap;
+            border-bottom: 2px solid #c2b48a;
         }
 
         .ramal-table td {
-            padding: 10px 8px;
+            padding: 12px 8px;
             border-bottom: 1px solid #f0e7da;
-            vertical-align: top;
         }
         .ramal-table tr:hover td {
             background: #fff6ea;
         }
 
+        /* Estilo para células editáveis no modo edição */
         .editable-cell {
             cursor: text;
             transition: 0.05s;
-        }
-        [contenteditable="true"] {
-            padding: 4px 6px;
-            border-radius: 8px;
             display: inline-block;
             width: 100%;
-            background: transparent;
+            text-align: center;
+            font-weight: 500;
+            padding: 4px 6px;
+            border-radius: 8px;
+        }
+        .editing-mode [contenteditable="true"] {
+            background: #fffef0;
+            border: 1px dashed #cbad73;
         }
         [contenteditable="true"]:focus {
             background: #fff1df;
             outline: 1px solid #cbad73;
+            box-shadow: 0 0 0 2px rgba(203,173,115,0.3);
+        }
+        
+        .ramal-number {
+            font-weight: 800;
+            background: #fbf6e8;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
         }
 
-        .delete-btn {
-            background: #d98c7a;
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .edit-row-btn, .delete-btn {
             border: none;
             border-radius: 30px;
             padding: 5px 12px;
             font-size: 0.7rem;
             font-weight: bold;
             cursor: pointer;
-            color: white;
             transition: 0.1s;
+        }
+        .edit-row-btn {
+            background: #7f8c5e;
+            color: white;
+        }
+        .edit-row-btn:hover {
+            background: #5e6b42;
+            transform: scale(0.97);
+        }
+        .delete-btn {
+            background: #d98c7a;
+            color: white;
         }
         .delete-btn:hover {
             background: #b54a3a;
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         .footer-actions {
@@ -259,6 +288,7 @@
             border-radius: 60px;
             border: 1px solid #cfbe96;
             font-size: 1rem;
+            text-align: center;
         }
         .modal-card button {
             margin: 5px;
@@ -267,20 +297,24 @@
             font-size: 0.7rem;
             background: #f3efdf;
             display: inline-block;
-            padding: 2px 8px;
+            padding: 2px 12px;
             border-radius: 30px;
             margin-left: 8px;
         }
         .selected-row {
             background-color: #fff0d6 !important;
+            box-shadow: inset 0 0 0 2px #e7cf9e;
+        }
+        .editing-mode-active {
+            background-color: #fef9e6;
         }
         @media print {
-            .toolbar, .btn-group, .search-box, .stats-badge, .footer-actions, .info-edit, .no-print, .btn, .modal-overlay, .delete-btn {
+            .toolbar, .btn-group, .search-box, .stats-badge, .footer-actions, .info-edit, .no-print, .btn, .modal-overlay, .delete-btn, .edit-row-btn {
                 display: none !important;
             }
             body { background: white; padding: 0.2in; }
             .container { padding: 0; box-shadow: none; }
-            .ramal-table th, .ramal-table td { border: 1px solid #aaa; }
+            .ramal-table th, .ramal-table td { border: 1px solid #aaa; text-align: center; }
         }
     </style>
 </head>
@@ -288,10 +322,9 @@
 <div class="container">
     <div class="header">
         <div class="logo-area">
-          
             <div class="title">
                 <h1>📞 Ramais Internos · Santana / Tucuruvi</h1>
-                <p> Lista de contatos administrativos</p>
+                <p> Lista centralizada | Edição segura com senha</p>
             </div>
         </div>
         <div class="stats-badge no-print" id="totalCount"></div>
@@ -300,7 +333,8 @@
     <div class="toolbar no-print">
         <div class="btn-group">
             <button class="btn btn-success" id="addRamalBtn">➕ Adicionar Ramal</button>
-            <button class="btn btn-danger" id="deleteRamalBtn">🗑️ Excluir Ramal (selecionado)</button>
+            <button class="btn btn-danger" id="deleteRamalBtn">🗑️ Excluir (selecionado)</button>
+            <button class="btn btn-warning" id="enableEditModeBtn">✏️ Ativar Edição (senha)</button>
             <button class="btn btn-primary" id="printBtn">🖨️ Imprimir / PDF</button>
             <button class="btn" id="resetDataBtn">⟳ Restaurar original</button>
         </div>
@@ -310,126 +344,161 @@
         </div>
     </div>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper" id="tableWrapper">
         <table class="ramal-table" id="ramalTable">
             <thead>
-                <tr><th>📞 Ramal</th><th>Setor</th><th>Setor (Completo)</th><th>Funcionário(s)</th><th>Funcionário </th><th>Terminal</th><th class="no-print" style="width: 80px;">Ação</th></tr>
+                <tr>
+                    <th>📞 Ramal</th>
+                    <th>Setor</th>
+                    <th>Funcionário</th>
+                    <th>Terminal</th>
+                    <th class="no-print" style="width: 130px;">⚙️ Ações</th>
+                </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
     <div class="footer-actions no-print">
-        <span class="info-edit">✎ Clique em qualquer célula para editar | 🔒 Adicionar/Excluir requer senha: <strong>********</strong></span>
+        <span class="info-edit">🔒 Visualização padrão | Clique em "Ativar Edição" para modificar dados (senha: ********)</span>
     </div>
 </div>
 
 <script>
-    // Dados convertidos diretamente da planilha "Santana-Tucuruvi" (Ramais Atualizados)
+    // ======================= DADOS ORIGINAIS =======================
     const originalRamais = [
-        { ramal: "100", setor: "Defesa Civil", setorCompleto: "DEFESA CIVIL", funcionario: "hilda", funcionarioUpper: "HILDA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "104", setor: "Gov Local Coordenadora", setorCompleto: "COORDENADORA DE GOV LOCAL", funcionario: "luciana", funcionarioUpper: "THIAGO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "105", setor: "Secretaria", setorCompleto: "SECRETARIA", funcionario: "rosana", funcionarioUpper: "ROSANA", terminal: "" },
-        { ramal: "106", setor: "COPA", setorCompleto: "COPA 1º ANDAR", funcionario: "copa", funcionarioUpper: "COPA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "107", setor: "Licit.Contrat", setorCompleto: "SAS LICITAÇÃO/CONTRATO", funcionario: "cidinha/cleo", funcionarioUpper: "CIDINHA/CLEO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "108", setor: "Ass.Jurid.", setorCompleto: "ASS JURIDICA EXP", funcionario: "leonardo", funcionarioUpper: "LEONARDO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "109", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "renato", funcionarioUpper: "RENATO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "110", setor: "STPO", setorCompleto: "STPO", funcionario: "margarete/cicero", funcionarioUpper: "MARGARETE/CICERO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "111", setor: "COPA", setorCompleto: "COPA 3º ANDAR", funcionario: "copa", funcionarioUpper: "COPA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "112", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "irene", funcionarioUpper: "IRENE", terminal: "" },
-        { ramal: "113", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "finanças", funcionarioUpper: "FINANÇAS", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "114", setor: "STLP Eng", setorCompleto: "ENGENHEIRO AGRÔNOMO", funcionario: "braulio/ricardo Agrônomo", funcionarioUpper: "RICARDO/BRAULIO", terminal: "" },
-        { ramal: "115", setor: "SUSL", setorCompleto: "UNAI", funcionario: "glaucia", funcionarioUpper: "GLAUCIA", terminal: "8028s Premium DeskPhone" },
-        { ramal: "116", setor: "Chefe Gabinete", setorCompleto: "CHEFE GABINETE", funcionario: "camila", funcionarioUpper: "CAMILA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "117", setor: "Ass.Jurid.", setorCompleto: "ASS JURIDICA EXP", funcionario: "toninho", funcionarioUpper: "TONINHO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "118", setor: "Ass.Jurid.", setorCompleto: "ASSESSOR JURÍDICO", funcionario: "gabriel", funcionarioUpper: "GABRIEL", terminal: "" },
-        { ramal: "119", setor: "Sup STLP", setorCompleto: "SUPERVISÃO DE STLP", funcionario: "joão wilson", funcionarioUpper: "JOÃO WILSON", terminal: "8028s Premium DeskPhone" },
-        { ramal: "120", setor: "Eng.Agronomo", setorCompleto: "ENGENHEIRO AGRÔNOMO", funcionario: "nicolau Agrônomo", funcionarioUpper: "NICOLAU", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "122", setor: "Compras", setorCompleto: "COMPRAS", funcionario: "barbara", funcionarioUpper: "BARBARA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "123", setor: "SAS", setorCompleto: "SAS EXP", funcionario: "Regiane", funcionarioUpper: "REGIANE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "124", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "roselly", funcionarioUpper: "ROSELLY", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "125", setor: "Compras", setorCompleto: "COMPRAS", funcionario: "fabricio", funcionarioUpper: "FABRICIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "126", setor: "Financas", setorCompleto: "SUPERVISÃO DE FINANÇAS", funcionario: "luciana", funcionarioUpper: "LUCIANA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "127", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "solange", funcionarioUpper: "SOLANGE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "128", setor: "Movimentacao", setorCompleto: "SUGESP IMD", funcionario: "lucas", funcionarioUpper: "LUCAS", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "129", setor: "CPO", setorCompleto: "SUPERVISÃO DE OBRAS", funcionario: "enio", funcionarioUpper: "ENIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "130", setor: "Sup SAS", setorCompleto: "SUPERVISÃO DE SAS", funcionario: "celso", funcionarioUpper: "CELSO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "131", setor: "FISCALIZAÇÃO", setorCompleto: "CPDU FISCALIZAÇÃO", funcionario: "ronaldo fiscal", funcionarioUpper: "RONALDO FISCAL", terminal: "" },
-        { ramal: "132", setor: "Supervisor", setorCompleto: "SUPERVISÃO DE SUGESP", funcionario: "izabel", funcionarioUpper: "IZABEL", terminal: "" },
-        { ramal: "133", setor: "AGTI", setorCompleto: "AGTI", funcionario: "miriam", funcionarioUpper: "MIRIAM", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "134", setor: "AGTI", setorCompleto: "AGTI", funcionario: "leticia", funcionarioUpper: "LETICIA", terminal: "" },
-        { ramal: "135", setor: "Exped.Coord.", setorCompleto: "CAF EXP", funcionario: "marina", funcionarioUpper: "MARINA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "136", setor: "Desenvolvimento", setorCompleto: "SUGESP DESENVOLVIMENTO", funcionario: "neila", funcionarioUpper: "NEILA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "137", setor: "Financas", setorCompleto: "SUPERVISÃO DE FINANÇAS", funcionario: "pedro", funcionarioUpper: "KATIA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "138", setor: "STPO", setorCompleto: "STPO", funcionario: "luis enrico", funcionarioUpper: "LUIS ENRICO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "139", setor: "Exp STM", setorCompleto: "STLP EXP", funcionario: "ari/vicente/nicolau Agrônomo", funcionarioUpper: "ARI/VICENTE/XAVIER/MAURICIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "140", setor: "Coordenador Expediente", setorCompleto: "OBRAS EXPEDIENTE", funcionario: "eliane", funcionarioUpper: "ELIANE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "141", setor: "Assessoria de Comunicação", setorCompleto: "ASSESSORA DE COMUNICAÇÃO", funcionario: "queila", funcionarioUpper: "QUEILA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "142", setor: "Assessoria", setorCompleto: "ASSESSORA DE GABINETE", funcionario: "gisa", funcionarioUpper: "GISA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "143", setor: "STPO", setorCompleto: "STPO", funcionario: "aretha", funcionarioUpper: "ARETHA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "144", setor: "Fiscalização", setorCompleto: "CPDU FISCALIZAÇÃO", funcionario: "monique fiscal", funcionarioUpper: "MONIQUE FISCAL", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "145", setor: "IMD", setorCompleto: "SUGESP IMD", funcionario: "fabi", funcionarioUpper: "FABI", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "146", setor: "SUSL", setorCompleto: "SUSL", funcionario: "miguel", funcionarioUpper: "MIGUEL", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "147", setor: "CPDU Coordenador", setorCompleto: "COORDENADOR DE CPDU", funcionario: "daniel", funcionarioUpper: "DANIEL", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "148", setor: "Coordenador Expediente", setorCompleto: "CPDU EXPEDIENTE", funcionario: "sandra/eliene", funcionarioUpper: "SANDRA/ELIENE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "149", setor: "Exp SUSL", setorCompleto: "SUSL EXP", funcionario: "valter", funcionarioUpper: "VALTER", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "150", setor: "Exp SUSL", setorCompleto: "SUSL EXP", funcionario: "claudemir", funcionarioUpper: "CLAUDEMIR", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "151", setor: "UNAI", setorCompleto: "UNAI", funcionario: "edson", funcionarioUpper: "EDSON", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "152", setor: "GABINETE Exp", setorCompleto: "GABINETE EXP", funcionario: "fabio/marciel/fatima/claudio", funcionarioUpper: "FABIO/MARCIEL/FATIMA/CLAUDIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "153", setor: "Cadastro", setorCompleto: "CADASTRO", funcionario: "silvia/nelson", funcionarioUpper: "SILVIA/NELSON", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "154", setor: "UTF", setorCompleto: "UTF", funcionario: "vanessa/goretti", funcionarioUpper: "VANESSA/GORETTI", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "155", setor: "SUGESP", setorCompleto: "SUGESP PAGAMENTO", funcionario: "raimundo", funcionarioUpper: "RAIMUNDO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "156", setor: "OBRAS", setorCompleto: "COORDENADOR DE OBRAS", funcionario: "dudu", funcionarioUpper: "EDUARDO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "157", setor: "Pagamento", setorCompleto: "SUGESP PAGAMENTO", funcionario: "luciana", funcionarioUpper: "LUCIANA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "159", setor: "Secretaria", setorCompleto: "SECRETARIA", funcionario: "Telma", funcionarioUpper: "TELMA", terminal: "8028s Premium DeskPhone" },
-        { ramal: "160", setor: "STPO", setorCompleto: "STPO", funcionario: "obras", funcionarioUpper: "OBRAS", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "161", setor: "SUGESP", setorCompleto: "SUGESP EXP", funcionario: "Expediente", funcionarioUpper: "EXPEDIENTE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "162", setor: "UTF", setorCompleto: "UTF", funcionario: "lilian", funcionarioUpper: "LILIAN", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "163", setor: "PORTARIA", setorCompleto: "PORTARIA", funcionario: "alison/rafael", funcionarioUpper: "ALISON/RAFAEL", terminal: "" },
-        { ramal: "164", setor: "SUSL", setorCompleto: "SUSL", funcionario: "regina", funcionarioUpper: "REGINA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "165", setor: "SUSL", setorCompleto: "SUSL", funcionario: "giovana/zuleika/luciane/sergio", funcionarioUpper: "GIOVANA/ZULEIKA/LUCIANE/SERGIO", terminal: "8028s Premium DeskPhone" },
-        { ramal: "166", setor: "Exp STM", setorCompleto: "STM EXP", funcionario: "sergio", funcionarioUpper: "SERGIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "167", setor: "Sup Esporte", setorCompleto: "SUPERVISÃO DE CULTURA", funcionario: "viviane", funcionarioUpper: "VIVIANE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "168", setor: "Sup Habitação", setorCompleto: "GOV LOCAL EXP", funcionario: "madai", funcionarioUpper: "MADAI", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "170", setor: "SUSL", setorCompleto: "SUSL", funcionario: "giovana/zuleika/luciane/sergio", funcionarioUpper: "GIOVANA/ZULEIKA/LUCIANE/SERGIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "171", setor: "CPO", setorCompleto: "STPO", funcionario: "felix", funcionarioUpper: "FELIX", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "173", setor: "Defesa Civil", setorCompleto: "DEFESA CIVIL", funcionario: "hilda", funcionarioUpper: "HILDA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "174", setor: "SupManut.STM", setorCompleto: "SUPERVISÃO DE STM", funcionario: "paulo seabra", funcionarioUpper: "PAULO SEABRA", terminal: "8028s Premium DeskPhone" },
-        { ramal: "175", setor: "Sup Fiscal", setorCompleto: "CPDU FISCALIZAÇÃO", funcionario: "alessandra fiscal", funcionarioUpper: "ALESSANDRA FISCAL", terminal: "8028s Premium DeskPhone" },
-        { ramal: "176", setor: "Exp SAS", setorCompleto: "SAS EXP", funcionario: "Vinicius", funcionarioUpper: "MARCOS VINICIUS", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "177", setor: "Exp Cultura", setorCompleto: "ESPORTE EXP", funcionario: "feijão/paulo", funcionarioUpper: "ALOISIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "178", setor: "AGTI", setorCompleto: "GOV LOCAL EXP", funcionario: "gov Local", funcionarioUpper: "GOV LOCAL", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "179", setor: "FISCALIZAÇÃO", setorCompleto: "CPDU FISCALIZAÇÃO", funcionario: "mariana/luciane", funcionarioUpper: "MARIANA/LUCIANE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "180", setor: "Sup Cultura", setorCompleto: "CULTURA EXP", funcionario: "feijão/paulo", funcionarioUpper: "FEIJÃO/PAULO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "181", setor: "Exp Esporte", setorCompleto: "SUPERVISÃO DE ESPORTE", funcionario: "esporte", funcionarioUpper: "CORNÉLIO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "182", setor: "SUGESP", setorCompleto: "SUGESP DESENVOLVIMENTO", funcionario: "elaine", funcionarioUpper: "ELAINE", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "183", setor: "Recepção", setorCompleto: "RECEPÇÃO", funcionario: "aline/janaina/joy", funcionarioUpper: "ALINE/JANAINA/JOY", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "184", setor: "SUGESP", setorCompleto: "SUGESP PAGAMENTO", funcionario: "Ana Paula", funcionarioUpper: "ANA PAULA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "186", setor: "Ass. Juridica", setorCompleto: "ASS JURIDICA EXP", funcionario: "iara", funcionarioUpper: "IARA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "187", setor: "Coordenador", setorCompleto: "COORDENADORA DE CAF", funcionario: "katia", funcionarioUpper: "MARTA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "188", setor: "Exp.STPL", setorCompleto: "STLP EXP", funcionario: "marcia/xavier/mauricio", funcionarioUpper: "MARCIA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "190", setor: "Defesa Civil", setorCompleto: "DEFESA CIVIL", funcionario: "hilda", funcionarioUpper: "HILDA", terminal: "" },
-        { ramal: "192", setor: "SAS Manut", setorCompleto: "SAS MANUTENÇÃO", funcionario: "equipe", funcionarioUpper: "ROGÉRIO/MANUEL/RODOLFO/MARRON/VILSON", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "194", setor: "Recepção", setorCompleto: "RECEPÇÃO", funcionario: "aline/janaina/joy", funcionarioUpper: "ALINE/JANAINA/JOY", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "198", setor: "Financas", setorCompleto: "FINANCAS", funcionario: "daniela", funcionarioUpper: "DANIELA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "214", setor: "COPA", setorCompleto: "COPA GABINETE", funcionario: "copa", funcionarioUpper: "COPA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "256", setor: "PABX", setorCompleto: "PABX", funcionario: "gabi", funcionarioUpper: "GABI", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "260", setor: "Encarregada da Limpeza", setorCompleto: "ENCARREGADA LIMPEZA", funcionario: "encarregada", funcionarioUpper: "ENCARREGADA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "21679776", setor: "DESCOMPLICA", setorCompleto: "DESCOMPLICA", funcionario: "praça de atendimento", funcionarioUpper: "PRAÇA ATENDIMENTO", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "21679777", setor: "DESCOMPLICA", setorCompleto: "DESCOMPLICA", funcionario: "roberta", funcionarioUpper: "ROBERTA", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "22037138", setor: "UNIDADE DE ARMAZENAMENTO", setorCompleto: "UNIDADE ARMAZENAMENTO", funcionario: "Eli/Carlinhos", funcionarioUpper: "ELI/CARLINHOS", terminal: "" },
-        { ramal: "976531773", setor: "ÁREAS VERDES", setorCompleto: "ÁREAS VERDES", funcionario: "eliel", funcionarioUpper: "ELIEL", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "29816263/29816264", setor: "BIBLIOTECA ORTHOFF", setorCompleto: "BIBLIOTECA ORTHOFF", funcionario: "biblioteca", funcionarioUpper: "BIBLIOTECA", terminal: "" },
-        { ramal: "29874496/29817770", setor: "CONSELHO TUTELAR", setorCompleto: "CONSELHO TUTELAR", funcionario: "conselho tutelar", funcionarioUpper: "CONSELHO TUTELAR", terminal: "SIP Phone(8008G CE)" },
-        { ramal: "33965700/33965712", setor: "DRE JAÇANÃ TREMEMBÉ", setorCompleto: "DRE JAÇANÃ TREMEMBÉ", funcionario: "educação", funcionarioUpper: "EDUCAÇÃO", terminal: "SIP Phone(8008G CE)" }
+        { ramal: "100", setor: "Defesa Civil", funcionario: "hilda", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "104", setor: "Gov Local Coordenadora", funcionario: "luciana", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "105", setor: "Secretaria", funcionario: "rosana", terminal: "" },
+        { ramal: "106", setor: "COPA", funcionario: "copa", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "107", setor: "Licit.Contrat", funcionario: "cidinha/cleo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "108", setor: "Ass.Jurid.", funcionario: "leonardo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "109", setor: "Financas", funcionario: "renato", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "110", setor: "STPO", funcionario: "margarete/cicero", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "111", setor: "COPA", funcionario: "copa", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "112", setor: "Financas", funcionario: "irene", terminal: "" },
+        { ramal: "113", setor: "Financas", funcionario: "finanças", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "114", setor: "STLP Eng", funcionario: "braulio/ricardo Agrônomo", terminal: "" },
+        { ramal: "115", setor: "SUSL", funcionario: "glaucia", terminal: "8028s Premium DeskPhone" },
+        { ramal: "116", setor: "Chefe Gabinete", funcionario: "camila", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "117", setor: "Ass.Jurid.", funcionario: "toninho", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "118", setor: "Ass.Jurid.", funcionario: "gabriel", terminal: "" },
+        { ramal: "119", setor: "Sup STLP", funcionario: "joão wilson", terminal: "8028s Premium DeskPhone" },
+        { ramal: "120", setor: "Eng.Agronomo", funcionario: "nicolau Agrônomo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "122", setor: "Compras", funcionario: "barbara", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "123", setor: "SAS", funcionario: "Regiane", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "124", setor: "Financas", funcionario: "roselly", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "125", setor: "Compras", funcionario: "fabricio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "126", setor: "Financas", funcionario: "luciana", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "127", setor: "Financas", funcionario: "solange", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "128", setor: "Movimentacao", funcionario: "lucas", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "129", setor: "CPO", funcionario: "enio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "130", setor: "Sup SAS", funcionario: "celso", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "131", setor: "FISCALIZAÇÃO", funcionario: "ronaldo fiscal", terminal: "" },
+        { ramal: "132", setor: "Supervisor", funcionario: "izabel", terminal: "" },
+        { ramal: "133", setor: "AGTI", funcionario: "miriam", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "134", setor: "AGTI", funcionario: "leticia", terminal: "" },
+        { ramal: "135", setor: "Exped.Coord.", funcionario: "marina", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "136", setor: "Desenvolvimento", funcionario: "neila", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "137", setor: "Financas", funcionario: "pedro", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "138", setor: "STPO", funcionario: "luis enrico", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "139", setor: "Exp STM", funcionario: "ari/vicente/nicolau Agrônomo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "140", setor: "Coordenador Expediente", funcionario: "eliane", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "141", setor: "Assessoria de Comunicação", funcionario: "queila", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "142", setor: "Assessoria", funcionario: "gisa", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "143", setor: "STPO", funcionario: "aretha", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "144", setor: "Fiscalização", funcionario: "monique fiscal", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "145", setor: "IMD", funcionario: "fabi", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "146", setor: "SUSL", funcionario: "miguel", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "147", setor: "CPDU Coordenador", funcionario: "daniel", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "148", setor: "Coordenador Expediente", funcionario: "sandra/eliene", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "149", setor: "Exp SUSL", funcionario: "valter", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "150", setor: "Exp SUSL", funcionario: "claudemir", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "151", setor: "UNAI", funcionario: "edson", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "152", setor: "GABINETE Exp", funcionario: "fabio/marciel/fatima/claudio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "153", setor: "Cadastro", funcionario: "silvia/nelson", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "154", setor: "UTF", funcionario: "vanessa/goretti", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "155", setor: "SUGESP", funcionario: "raimundo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "156", setor: "OBRAS", funcionario: "dudu", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "157", setor: "Pagamento", funcionario: "luciana", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "159", setor: "Secretaria", funcionario: "Telma", terminal: "8028s Premium DeskPhone" },
+        { ramal: "160", setor: "STPO", funcionario: "obras", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "161", setor: "SUGESP", funcionario: "Expediente", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "162", setor: "UTF", funcionario: "lilian", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "163", setor: "PORTARIA", funcionario: "alison/rafael", terminal: "" },
+        { ramal: "164", setor: "SUSL", funcionario: "regina", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "165", setor: "SUSL", funcionario: "giovana/zuleika/luciane/sergio", terminal: "8028s Premium DeskPhone" },
+        { ramal: "166", setor: "Exp STM", funcionario: "sergio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "167", setor: "Sup Esporte", funcionario: "viviane", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "168", setor: "Sup Habitação", funcionario: "madai", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "170", setor: "SUSL", funcionario: "giovana/zuleika/luciane/sergio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "171", setor: "CPO", funcionario: "felix", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "173", setor: "Defesa Civil", funcionario: "hilda", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "174", setor: "SupManut.STM", funcionario: "paulo seabra", terminal: "8028s Premium DeskPhone" },
+        { ramal: "175", setor: "Sup Fiscal", funcionario: "alessandra fiscal", terminal: "8028s Premium DeskPhone" },
+        { ramal: "176", setor: "Exp SAS", funcionario: "Vinicius", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "177", setor: "Exp Cultura", funcionario: "feijão/paulo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "178", setor: "AGTI", funcionario: "gov Local", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "179", setor: "FISCALIZAÇÃO", funcionario: "mariana/luciane", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "180", setor: "Sup Cultura", funcionario: "feijão/paulo", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "181", setor: "Exp Esporte", funcionario: "esporte", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "182", setor: "SUGESP", funcionario: "elaine", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "183", setor: "Recepção", funcionario: "aline/janaina/joy", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "184", setor: "SUGESP", funcionario: "Ana Paula", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "186", setor: "Ass. Juridica", funcionario: "iara", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "187", setor: "Coordenador", funcionario: "katia", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "188", setor: "Exp.STPL", funcionario: "marcia/xavier/mauricio", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "190", setor: "Defesa Civil", funcionario: "hilda", terminal: "" },
+        { ramal: "192", setor: "SAS Manut", funcionario: "equipe", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "194", setor: "Recepção", funcionario: "aline/janaina/joy", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "198", setor: "Financas", funcionario: "daniela", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "214", setor: "COPA", funcionario: "copa", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "256", setor: "PABX", funcionario: "gabi", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "260", setor: "Encarregada da Limpeza", funcionario: "encarregada", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "21679776", setor: "DESCOMPLICA", funcionario: "praça de atendimento", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "21679777", setor: "DESCOMPLICA", funcionario: "roberta", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "22037138", setor: "UNIDADE DE ARMAZENAMENTO", funcionario: "Eli/Carlinhos", terminal: "" },
+        { ramal: "976531773", setor: "ÁREAS VERDES", funcionario: "eliel", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "29816263/29816264", setor: "BIBLIOTECA ORTHOFF", funcionario: "biblioteca", terminal: "" },
+        { ramal: "29874496/29817770", setor: "CONSELHO TUTELAR", funcionario: "conselho tutelar", terminal: "SIP Phone(8008G CE)" },
+        { ramal: "33965700/33965712", setor: "DRE JAÇANÃ TREMEMBÉ", funcionario: "educação", terminal: "SIP Phone(8008G CE)" }
     ];
 
     let ramaisData = JSON.parse(JSON.stringify(originalRamais));
     let currentFilter = "";
-    let selectedRowIndex = null;
     let selectedRamalId = null;
-
-    // SENHA DEFINIDA
+    let editModeActive = false;          // Flag para saber se edição está ativa
     const ADMIN_PASSWORD = "agti2026";
+
+    function saveToLocal() { localStorage.setItem('ramais_cei_editavel', JSON.stringify(ramaisData)); }
+    
+    // Cria célula editável (contenteditable) ou texto puro conforme modo de edição
+    function renderCellContent(value, fieldName, item, rowKey) {
+        if (editModeActive) {
+            const span = document.createElement('span');
+            span.setAttribute('contenteditable', 'true');
+            span.classList.add('editable-cell');
+            span.textContent = value || "—";
+            span.addEventListener('blur', () => {
+                const newValue = span.textContent;
+                if (newValue !== value) {
+                    const target = ramaisData.find(r => (r.ramal + "|" + r.setor) === rowKey);
+                    if (target) {
+                        target[fieldName] = newValue;
+                        saveToLocal();
+                        renderTable();  // re-renderiza para manter consistência
+                    }
+                }
+            });
+            span.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); span.blur(); } });
+            return span;
+        } else {
+            const plainSpan = document.createElement('span');
+            plainSpan.textContent = value || "—";
+            plainSpan.style.display = 'inline-block';
+            plainSpan.style.width = '100%';
+            return plainSpan;
+        }
+    }
 
     function renderTable() {
         const tbody = document.getElementById('tableBody');
@@ -437,125 +506,151 @@
         const filtered = currentFilter.trim() === "" ? ramaisData : ramaisData.filter(item => 
             item.ramal.toLowerCase().includes(currentFilter) ||
             item.setor.toLowerCase().includes(currentFilter) ||
-            item.setorCompleto.toLowerCase().includes(currentFilter) ||
             item.funcionario.toLowerCase().includes(currentFilter) ||
-            item.funcionarioUpper.toLowerCase().includes(currentFilter) ||
             item.terminal.toLowerCase().includes(currentFilter)
         );
         
-        filtered.forEach((item, idx) => {
+        // Aplica classe CSS para indicar modo edição no wrapper
+        const wrapper = document.getElementById('tableWrapper');
+        if (editModeActive) wrapper.classList.add('editing-mode');
+        else wrapper.classList.remove('editing-mode');
+        
+        filtered.forEach((item) => {
             const row = tbody.insertRow();
-            if (selectedRamalId === item.ramal + "|" + item.setorCompleto) {
-                row.classList.add('selected-row');
-            }
+            const rowKey = item.ramal + "|" + item.setor;
+            if (selectedRamalId === rowKey) row.classList.add('selected-row');
             
-            // Ramal (não editável)
+            // Coluna Ramal (editável se modo ativo)
             const tdRamal = row.insertCell(0);
-            tdRamal.textContent = item.ramal;
-            tdRamal.style.fontWeight = "bold";
+            const ramalContent = renderCellContent(item.ramal, 'ramal', item, rowKey);
+            if (!editModeActive) ramalContent.style.fontWeight = '800';
+            tdRamal.appendChild(ramalContent);
             
-            // Setor editável
+            // Setor
             const tdSetor = row.insertCell(1);
-            const setorSpan = createEditableSpan(item.setor, (newVal) => { 
-                const target = ramaisData.find(r => r.ramal === item.ramal && r.setorCompleto === item.setorCompleto);
-                if (target) target.setor = newVal; saveToLocal(); renderTable(); 
-            });
-            tdSetor.appendChild(setorSpan);
+            tdSetor.appendChild(renderCellContent(item.setor, 'setor', item, rowKey));
             
-            // SetorCompleto editável
-            const tdSetorComp = row.insertCell(2);
-            const setorCompSpan = createEditableSpan(item.setorCompleto, (newVal) => { 
-                const target = ramaisData.find(r => r.ramal === item.ramal && r.setorCompleto === item.setorCompleto);
-                if (target) target.setorCompleto = newVal; saveToLocal(); renderTable(); 
-            });
-            tdSetorComp.appendChild(setorCompSpan);
+            // Funcionário
+            const tdFunc = row.insertCell(2);
+            tdFunc.appendChild(renderCellContent(item.funcionario, 'funcionario', item, rowKey));
             
-            // Funcionario editável
-            const tdFunc = row.insertCell(3);
-            const funcSpan = createEditableSpan(item.funcionario, (newVal) => { 
-                const target = ramaisData.find(r => r.ramal === item.ramal && r.setorCompleto === item.setorCompleto);
-                if (target) target.funcionario = newVal; saveToLocal(); renderTable(); 
-            });
-            tdFunc.appendChild(funcSpan);
+            // Terminal
+            const tdTerm = row.insertCell(3);
+            tdTerm.appendChild(renderCellContent(item.terminal, 'terminal', item, rowKey));
             
-            // FuncionarioUpper editável
-            const tdFuncUpper = row.insertCell(4);
-            const upperSpan = createEditableSpan(item.funcionarioUpper, (newVal) => { 
-                const target = ramaisData.find(r => r.ramal === item.ramal && r.setorCompleto === item.setorCompleto);
-                if (target) target.funcionarioUpper = newVal; saveToLocal(); renderTable(); 
-            });
-            tdFuncUpper.appendChild(upperSpan);
-            
-            // Terminal editável
-            const tdTerm = row.insertCell(5);
-            const termSpan = createEditableSpan(item.terminal, (newVal) => { 
-                const target = ramaisData.find(r => r.ramal === item.ramal && r.setorCompleto === item.setorCompleto);
-                if (target) target.terminal = newVal; saveToLocal(); renderTable(); 
-            });
-            tdTerm.appendChild(termSpan);
-            
-            // Botão excluir individual
-            const tdAction = row.insertCell(6);
+            // Ações: botão Editar (se modo inativo, clicar solicita senha) + Excluir
+            const tdAction = row.insertCell(4);
             tdAction.classList.add('no-print');
             tdAction.style.textAlign = "center";
+            const actionDiv = document.createElement('div');
+            actionDiv.className = 'action-buttons';
+            
+            // Botão editar específico da linha (se modo inativo, pede senha e ativa modo + seleciona)
+            const editRowBtn = document.createElement('button');
+            editRowBtn.textContent = editModeActive ? "✏️ Editar" : "🔒 Editar";
+            editRowBtn.classList.add('edit-row-btn');
+            editRowBtn.title = editModeActive ? "Editar esta linha (já ativo)" : "Ativar modo edição com senha";
+            editRowBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (!editModeActive) {
+                    // Solicita senha e ativa modo edição global
+                    promptPasswordToEnableEdit(() => {
+                        editModeActive = true;
+                        renderTable();
+                        // Após ativar, rola um pouco e destaca linha
+                        setTimeout(() => {
+                            const newRow = document.querySelector(`tr.selected-row`);
+                            if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 50);
+                    });
+                } else {
+                    // Já em modo edição, apenas informa que pode clicar diretamente nas células
+                    alert("✏️ Modo edição já ativo! Clique diretamente nas células para editar.");
+                }
+            };
+            actionDiv.appendChild(editRowBtn);
+            
+            // Botão excluir
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = "🗑️";
             deleteBtn.classList.add('delete-btn');
-            deleteBtn.title = "Excluir este ramal (requer senha)";
+            deleteBtn.title = "Excluir ramal (requer senha)";
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
-                promptDeleteWithPassword(item.ramal, item.setor, item.setorCompleto);
+                promptDeleteWithPassword(item.ramal, item.setor);
             };
-            tdAction.appendChild(deleteBtn);
+            actionDiv.appendChild(deleteBtn);
+            tdAction.appendChild(actionDiv);
             
-            // Clique na linha para selecionar
+            // Seleção de linha (exceto se clicar nos botões)
             row.onclick = (e) => {
                 if (e.target.tagName !== 'BUTTON' && !e.target.isContentEditable) {
-                    selectedRamalId = item.ramal + "|" + item.setorCompleto;
+                    selectedRamalId = rowKey;
                     renderTable();
                 }
             };
         });
-        document.getElementById('totalCount').innerHTML = `📋 ${filtered.length} ramais cadastrados`;
+        document.getElementById('totalCount').innerHTML = `📋 ${filtered.length} ramais cadastrados ${editModeActive ? '(Modo Edição Ativo)' : ''}`;
     }
-
-    function createEditableSpan(initialValue, onBlurCallback) {
-        const span = document.createElement('span');
-        span.setAttribute('contenteditable', 'true');
-        span.classList.add('editable-cell');
-        span.textContent = initialValue || "";
-        span.addEventListener('blur', () => { if (span.textContent !== initialValue) onBlurCallback(span.textContent); });
-        span.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); span.blur(); } });
-        return span;
+    
+    function promptPasswordToEnableEdit(callback) {
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'modal-overlay';
+        modalDiv.innerHTML = `
+            <div class="modal-card">
+                <h3>🔐 Ativar Edição</h3>
+                <p>Digite a senha para permitir edição dos dados:</p>
+                <input type="password" id="passInput" placeholder="senha" autocomplete="off">
+                <div>
+                    <button class="btn" id="modalConfirm">Ativar Edição</button>
+                    <button class="btn" id="modalCancel">Cancelar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        const input = modalDiv.querySelector('#passInput');
+        const confirmBtn = modalDiv.querySelector('#modalConfirm');
+        const cancelBtn = modalDiv.querySelector('#modalCancel');
+        const closeModal = () => modalDiv.remove();
+        
+        confirmBtn.onclick = () => {
+            if (input.value === ADMIN_PASSWORD) {
+                closeModal();
+                callback();
+            } else {
+                alert("❌ Senha incorreta! Edição não ativada.");
+                closeModal();
+            }
+        };
+        cancelBtn.onclick = closeModal;
+        input.focus();
     }
-
-    function saveToLocal() { localStorage.setItem('ramais_cei_data_v2', JSON.stringify(ramaisData)); }
     
     function loadFromLocal() {
-        const saved = localStorage.getItem('ramais_cei_data_v2');
+        const saved = localStorage.getItem('ramais_cei_editavel');
         if (saved) ramaisData = JSON.parse(saved);
         else ramaisData = JSON.parse(JSON.stringify(originalRamais));
         renderTable();
     }
-
+    
     function resetData() { 
         if (confirm("⚠️ Tem certeza que deseja restaurar a lista original? Todas as alterações e adições serão perdidas.")) {
             ramaisData = JSON.parse(JSON.stringify(originalRamais)); 
             saveToLocal(); 
             selectedRamalId = null;
+            editModeActive = false;  // desativa edição ao restaurar
             renderTable();
             alert("✅ Lista restaurada com sucesso!");
         }
     }
-
-    // Função para excluir com senha
-    function promptDeleteWithPassword(ramal, setor, setorCompleto) {
+    
+    function promptDeleteWithPassword(ramal, setor) {
         const modalDiv = document.createElement('div');
         modalDiv.className = 'modal-overlay';
         modalDiv.innerHTML = `
             <div class="modal-card">
                 <h3>🔐 Autorização necessária</h3>
-                <p>Excluir ramal <strong>${ramal}</strong> - ${setor}</p>
+                <p>Excluir ramal <strong>${escapeHtml(ramal)}</strong> - ${escapeHtml(setor)}</p>
                 <p>Digite a senha para confirmar exclusão:</p>
                 <input type="password" id="passInput" placeholder="senha" autocomplete="off">
                 <div>
@@ -571,36 +666,28 @@
         const closeModal = () => modalDiv.remove();
         
         confirmBtn.onclick = () => {
-            const password = input.value;
-            if (password === ADMIN_PASSWORD) {
-                const index = ramaisData.findIndex(r => r.ramal === ramal && r.setorCompleto === setorCompleto);
+            if (input.value === ADMIN_PASSWORD) {
+                const index = ramaisData.findIndex(r => r.ramal === ramal && r.setor === setor);
                 if (index !== -1) {
                     ramaisData.splice(index, 1);
                     saveToLocal();
                     selectedRamalId = null;
                     renderTable();
                     alert("✅ Ramal excluído com sucesso!");
-                } else {
-                    alert("❌ Ramal não encontrado.");
-                }
+                } else alert("❌ Ramal não encontrado.");
                 closeModal();
-            } else {
-                alert("❌ Senha incorreta! Exclusão cancelada.");
-                closeModal();
-            }
+            } else { alert("❌ Senha incorreta! Exclusão cancelada."); closeModal(); }
         };
-        cancelBtn.onclick = () => closeModal();
+        cancelBtn.onclick = closeModal;
         input.focus();
-        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') confirmBtn.click(); });
     }
-
-    // Adicionar ramal com senha
+    
     function promptAddRamal() {
         const modalDiv = document.createElement('div');
         modalDiv.className = 'modal-overlay';
         modalDiv.innerHTML = `
             <div class="modal-card">
-                <h3>🔐 Autorização necessária</h3>
+                <h3>🔐 Adicionar Ramal</h3>
                 <p>Digite a senha para adicionar novo ramal:</p>
                 <input type="password" id="passInput" placeholder="senha" autocomplete="off">
                 <div>
@@ -616,54 +703,52 @@
         const closeModal = () => modalDiv.remove();
         
         confirmBtn.onclick = () => {
-            const password = input.value;
-            if (password === ADMIN_PASSWORD) {
+            if (input.value === ADMIN_PASSWORD) {
                 closeModal();
                 const newRamal = prompt("📞 Novo ramal/telefone (ex: 199 ou 12345678):");
                 if (!newRamal) return;
                 const newSetor = prompt("Setor:");
                 if (!newSetor) return;
                 const newFunc = prompt("Funcionário(s):");
+                if (!newFunc) return;
+                const newTerminal = prompt("Terminal (opcional):", "SIP Phone");
                 ramaisData.push({
                     ramal: newRamal,
                     setor: newSetor,
-                    setorCompleto: prompt("Setor completo (ou igual ao anterior):", newSetor) || newSetor,
                     funcionario: newFunc,
-                    funcionarioUpper: (newFunc || "").toUpperCase(),
-                    terminal: prompt("Terminal (opcional):", "SIP Phone")
+                    terminal: newTerminal || ""
                 });
                 saveToLocal();
                 renderTable();
                 alert("✅ Ramal adicionado com sucesso!");
-            } else {
-                alert("❌ Senha incorreta! Ação cancelada.");
-                closeModal();
-            }
+            } else { alert("❌ Senha incorreta! Ação cancelada."); closeModal(); }
         };
-        cancelBtn.onclick = () => closeModal();
+        cancelBtn.onclick = closeModal;
         input.focus();
     }
-
-    // Excluir ramal selecionado (botão geral)
+    
     function deleteSelectedRamal() {
-        if (!selectedRamalId) {
-            alert("⚠️ Clique em um ramal na tabela para selecioná-lo antes de excluir.");
-            return;
-        }
-        const [ramal, setorCompleto] = selectedRamalId.split("|");
-        const ramalObj = ramaisData.find(r => r.ramal === ramal && r.setorCompleto === setorCompleto);
-        if (ramalObj) {
-            promptDeleteWithPassword(ramalObj.ramal, ramalObj.setor, ramalObj.setorCompleto);
-        } else {
-            alert("❌ Ramal não encontrado.");
-            selectedRamalId = null;
-            renderTable();
-        }
+        if (!selectedRamalId) { alert("⚠️ Clique em um ramal na tabela para selecioná-lo antes de excluir."); return; }
+        const [ramal, setor] = selectedRamalId.split("|");
+        const ramalObj = ramaisData.find(r => r.ramal === ramal && r.setor === setor);
+        if (ramalObj) promptDeleteWithPassword(ramalObj.ramal, ramalObj.setor);
+        else { alert("❌ Ramal não encontrado."); selectedRamalId = null; renderTable(); }
     }
-
-    // Eventos
+    
+    function enableEditModeWithPassword() {
+        promptPasswordToEnableEdit(() => {
+            editModeActive = true;
+            renderTable();
+            alert("✏️ Modo edição ativado! Agora você pode clicar diretamente nas células para editar.");
+        });
+    }
+    
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    
+    // Event listeners
     document.getElementById('addRamalBtn').onclick = promptAddRamal;
     document.getElementById('deleteRamalBtn').onclick = deleteSelectedRamal;
+    document.getElementById('enableEditModeBtn').onclick = enableEditModeWithPassword;
     document.getElementById('printBtn').onclick = () => window.print();
     document.getElementById('resetDataBtn').onclick = resetData;
     document.getElementById('searchInput').addEventListener('input', (e) => { 
