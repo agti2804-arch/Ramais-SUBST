@@ -120,6 +120,13 @@
         .btn-excel:hover {
             background: #145a3b;
         }
+        .btn-password {
+            background: #6b5b7e;
+            color: white;
+        }
+        .btn-password:hover {
+            background: #55456b;
+        }
 
         .btn:hover {
             transform: translateY(-1px);
@@ -342,6 +349,7 @@
             <button class="btn btn-success" id="addRamalBtn">➕ Adicionar Ramal</button>
             <button class="btn btn-danger" id="deleteRamalBtn">🗑️ Excluir (selecionado)</button>
             <button class="btn btn-warning" id="enableEditModeBtn">✏️ Ativar Edição (senha)</button>
+            <button class="btn btn-password" id="changePasswordBtn">🔑 Alterar Senha</button>
             <button class="btn btn-excel" id="exportExcelBtn">📎 Exportar para Excel</button>
             <button class="btn btn-primary" id="printBtn">🖨️ Imprimir / PDF</button>
             <button class="btn" id="resetDataBtn">⟳ Restaurar original</button>
@@ -367,7 +375,7 @@
         </table>
     </div>
     <div class="footer-actions no-print">
-        <span class="info-edit">🔒 Visualização padrão | Clique em "Ativar Edição" para modificar dados (senha: agti2026) | Exportar leva em conta o filtro atual</span>
+        <span class="info-edit">🔒 Visualização padrão | Clique em "Ativar Edição" para modificar dados (senha cadastrada) | Exportar leva em conta o filtro atual</span>
     </div>
 </div>
 
@@ -471,14 +479,31 @@
         { ramal: "33965700/33965712", setor: "DRE JAÇANÃ TREMEMBÉ", funcionario: "educação", terminal: "SIP Phone(8008G CE)" }
     ];
 
+    // Gerenciamento de senha: padrão inicial "agti2026" (porém armazenada de forma simples)
+    let ADMIN_PASSWORD = "agti2026";
+
     let ramaisData = JSON.parse(JSON.stringify(originalRamais));
     let currentFilter = "";
     let selectedRamalId = null;
     let editModeActive = false;
-    const ADMIN_PASSWORD = "xxxxxxxx";
 
-    function saveToLocal() { localStorage.setItem('ramais_cei_editavel', JSON.stringify(ramaisData)); }
+    function saveToLocal() { 
+        localStorage.setItem('ramais_cei_editavel', JSON.stringify(ramaisData));
+        localStorage.setItem('ramais_admin_pass', btoa(ADMIN_PASSWORD));
+    }
     
+    function loadPasswordFromLocal() {
+        const storedPass = localStorage.getItem('ramais_admin_pass');
+        if (storedPass) {
+            try {
+                ADMIN_PASSWORD = atob(storedPass);
+            } catch(e) { ADMIN_PASSWORD = "agti2026"; }
+        } else {
+            ADMIN_PASSWORD = "agti2026";
+            localStorage.setItem('ramais_admin_pass', btoa(ADMIN_PASSWORD));
+        }
+    }
+
     function getFilteredData() {
         if (currentFilter.trim() === "") return ramaisData;
         return ramaisData.filter(item => 
@@ -594,7 +619,6 @@
             return;
         }
         
-        // Cabeçalhos
         const headers = ["Ramal", "Setor", "Funcionário", "Terminal"];
         const rows = filtered.map(item => [
             item.ramal,
@@ -603,7 +627,6 @@
             item.terminal || ""
         ]);
         
-        // Criar conteúdo CSV (compatível com Excel)
         let csvContent = headers.join(",") + "\n";
         rows.forEach(row => {
             const escapedRow = row.map(cell => {
@@ -616,7 +639,6 @@
             csvContent += escapedRow + "\n";
         });
         
-        // Adicionar BOM para UTF-8 e fazer download
         const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
@@ -779,6 +801,60 @@
             alert("✏️ Modo edição ativado! Agora você pode clicar diretamente nas células para editar.");
         });
     }
+
+    // Função para alterar a senha (nova funcionalidade)
+    function changePassword() {
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'modal-overlay';
+        modalDiv.innerHTML = `
+            <div class="modal-card">
+                <h3>🔐 Alterar Senha de Administrador</h3>
+                <p>Digite a senha ATUAL:</p>
+                <input type="password" id="currentPass" placeholder="senha atual" autocomplete="off">
+                <p>Digite a NOVA senha:</p>
+                <input type="password" id="newPass" placeholder="nova senha" autocomplete="off">
+                <p>Confirme a NOVA senha:</p>
+                <input type="password" id="confirmPass" placeholder="confirme nova senha" autocomplete="off">
+                <div>
+                    <button class="btn" id="modalConfirm">Alterar Senha</button>
+                    <button class="btn" id="modalCancel">Cancelar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        const currentInput = modalDiv.querySelector('#currentPass');
+        const newInput = modalDiv.querySelector('#newPass');
+        const confirmInput = modalDiv.querySelector('#confirmPass');
+        const confirmBtn = modalDiv.querySelector('#modalConfirm');
+        const cancelBtn = modalDiv.querySelector('#modalCancel');
+        const closeModal = () => modalDiv.remove();
+        
+        confirmBtn.onclick = () => {
+            const current = currentInput.value;
+            const newPwd = newInput.value;
+            const confirmPwd = confirmInput.value;
+            
+            if (current !== ADMIN_PASSWORD) {
+                alert("❌ Senha atual incorreta! Operação cancelada.");
+                closeModal();
+                return;
+            }
+            if (newPwd.length === 0) {
+                alert("❌ A nova senha não pode estar vazia.");
+                return;
+            }
+            if (newPwd !== confirmPwd) {
+                alert("❌ A confirmação da nova senha não coincide.");
+                return;
+            }
+            ADMIN_PASSWORD = newPwd;
+            localStorage.setItem('ramais_admin_pass', btoa(ADMIN_PASSWORD));
+            alert("✅ Senha alterada com sucesso! Use a nova senha para edições, exclusões e adições.");
+            closeModal();
+        };
+        cancelBtn.onclick = closeModal;
+        currentInput.focus();
+    }
     
     function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
     
@@ -786,6 +862,7 @@
     document.getElementById('addRamalBtn').onclick = promptAddRamal;
     document.getElementById('deleteRamalBtn').onclick = deleteSelectedRamal;
     document.getElementById('enableEditModeBtn').onclick = enableEditModeWithPassword;
+    document.getElementById('changePasswordBtn').onclick = changePassword;
     document.getElementById('exportExcelBtn').onclick = exportToExcel;
     document.getElementById('printBtn').onclick = () => window.print();
     document.getElementById('resetDataBtn').onclick = resetData;
@@ -795,6 +872,7 @@
         renderTable(); 
     });
     
+    loadPasswordFromLocal();
     loadFromLocal();
 </script>
 </body>
